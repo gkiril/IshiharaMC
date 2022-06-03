@@ -2,20 +2,29 @@ import matplotlib.pyplot as plt
 import scipy
 from random import random as rand
 import pickle
+import numpy as np
 
-beast = pickle.load(open('beast2.p','rb'))
+import gzip
+import numpy
+import pdb
 
-diamond = [scipy.array([[.5,0],[0,.5],[-.5,0],[0,-.5]])]
+#with open('beast2New.p','rb') as f:
+#    u = pickle._Unpickler(f)
+#    u.encoding = 'latin1'
+#    beast = u.load()
+#    #print(beast)
 
-color1 = scipy.array([43.,172.,142.])/255 # hex 2bac90
-color2 = scipy.array([242.,111.,41.])/255 # hex f26f29
+diamond = [np.array([[.5,0],[0,.5],[-.5,0],[0,-.5]])]
+
+color1 = np.array([43.,172.,142.])/255 # hex 2bac90
+color2 = np.array([242.,111.,41.])/255 # hex f26f29
 
 r = []
 g = []
-r += [scipy.array([193.,21.,45.])/255] #c1152d
-r += [scipy.array([226.,100.,78.])/255] #e2644e
-g += [scipy.array([0.,141.,55.])/255] #008d37
-g += [scipy.array([124.,188.,74.])/255] #7cbc4a
+r += [np.array([193.,21.,45.])/255] #c1152d
+r += [np.array([226.,100.,78.])/255] #e2644e
+g += [np.array([0.,141.,55.])/255] #008d37
+g += [np.array([124.,188.,74.])/255] #7cbc4a
 
 
 ################################################
@@ -32,7 +41,7 @@ def genCirc(l=1., s=[.03,.06], n=3):
 
 def genIshi(num=1e4, l=1., s=[.03,.06], n=3, output=[],slim=.01):
     leng = len(output)
-    for i in xrange(int(num)):
+    for i in range(int(num)):
         valid = True
         j = 0
         test = genCirc(l=l, s=s, n=n) #get a random circle in range
@@ -55,7 +64,7 @@ def genIshi(num=1e4, l=1., s=[.03,.06], n=3, output=[],slim=.01):
 
 def shapeIshi(shapes,num=1e4, l=1., s=[.03,.06], n=3, output=[],slim=.01):
     leng = len(output)
-    for i in xrange(int(num)):
+    for i in range(int(num)):
         valid = True
         j = 0
         test = genCirc(l=l, s=s, n=n) #get a random circle in range
@@ -65,7 +74,7 @@ def shapeIshi(shapes,num=1e4, l=1., s=[.03,.06], n=3, output=[],slim=.01):
             while valid:
                 if j == leng: # test while loop across current set of circles
                     for k in shapes: # test circle to see if it intersects interior shape
-                        valid = valid and shapeTest(k,scipy.array([inpx,inpy,test[2]]))
+                        valid = valid and shapeTest(k,np.array([inpx,inpy,test[2]]))
                             
                     if valid:
                         output += [[inpx,
@@ -149,7 +158,7 @@ def createPlate(shape,l=1.,s=[[.03,.06],[.02,.05],[.01,.04],[.0,.03]],num=[1e4,2
 
     output = []
     
-    for i in xrange(len(num)):
+    for i in range(len(num)):
         print('step '+str(i+1)+' of '+str(len(num)))
         output = shapeIshi(shape,l=l,s=s[i],num=num[i],output=output) 
     return output
@@ -232,7 +241,7 @@ def circTest(pt1,pt2,circ,r):
         return False # line intersects, but not between pt1 to pt2
 
 def shapeTest(pts,circ):
-    for i in xrange(len(pts)): #while still a valid circle
+    for i in range(len(pts)): #while still a valid circle
         if circTest(pts[i],pts[i-1],circ[:2],circ[2]): #intersects a line
             return False
     
@@ -240,12 +249,12 @@ def shapeTest(pts,circ):
 
 def circinPoly(shape,ishi):
     # interface with inPolygon (Thanks John!!!)
-    temp = scipy.array(shape)
+    temp = np.array(shape)
     output = len(ishi)*[False]
-    for i in xrange(len(ishi)):
+    for i in range(len(ishi)):
         output[i] = inPolygon(shape[...,0],shape[...,1],ishi[i][0],ishi[i][1])
 
-    return scipy.array(output)
+    return np.array(output)
 
 def inPolygon(polyx, polyy, pointx, pointy):
     """Function calculating whether a given point is within a 2D polygon.
